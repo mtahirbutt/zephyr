@@ -4,8 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "updatehub_device.h"
-
-#include <string.h>
+ #include <string.h> 
 
 bool updatehub_get_device_identity(char *id, int id_max_len)
 {

@@ -1578,11 +1578,26 @@ static int offload_getaddrinfo(const char *node, const char *service,
 	result.ai_addrlen = sizeof(result_addr);
 	result.ai_canonname = result_canonname;
 	result_canonname[0] = '\0';
+		
+	if (service) {
+		port = ATOI(service, 0U, "port");
+		if (port < 1 || port > USHRT_MAX) {
+			return EAI_SERVICE;
+		}
+	}
+
+	if (port > 0U) {
+		/* FIXME: DNS is hard-coded to return only IPv4 */
+		if (result.ai_family == AF_INET) {
+			net_sin(&result_addr)->sin_port = htons(port);
+		}
+	}
+
 
 	/* check to see if node is an IP address */
 	if (net_addr_pton(result.ai_family, node,
 			  &((struct sockaddr_in *)&result_addr)->sin_addr)
-	    == 1) {
+	    == 0) {
 		*res = &result;
 		return 0;
 	}
@@ -1592,12 +1607,13 @@ static int offload_getaddrinfo(const char *node, const char *service,
 		return EAI_NONAME;
 	}
 
-	if (service) {
+/*	if (service) {
 		port = ATOI(service, 0U, "port");
 		if (port < 1 || port > USHRT_MAX) {
 			return EAI_SERVICE;
 		}
 	}
+*/
 
 	snprintk(sendbuf, sizeof(sendbuf), "AT+UDNSRN=0,\"%s\"", node);
 	ret = modem_cmd_send(&mctx.iface, &mctx.cmd_handler,
@@ -1607,12 +1623,7 @@ static int offload_getaddrinfo(const char *node, const char *service,
 		return ret;
 	}
 
-	if (port > 0U) {
-		/* FIXME: DNS is hard-coded to return only IPv4 */
-		if (result.ai_family == AF_INET) {
-			net_sin(&result_addr)->sin_port = htons(port);
-		}
-	}
+
 
 	LOG_DBG("DNS RESULT: %s",
 		log_strdup(net_addr_ntop(result.ai_family,
