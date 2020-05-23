@@ -52,7 +52,7 @@ static int frdm_k82f_pinmux_init(struct device *dev)
 	/* FXOS8700 INT1 */
 	pinmux_pin_set(portc, 13, PORT_PCR_MUX(kPORT_MuxAsGpio));
 
-#if DT_NODE_HAS_STATUS(DT_NODELABEL(i2c3), okay)
+#if DT_NODE_HAS_STATUS(DT_NODELABEL(i2c3), okay) && CONFIG_I2C
 	/* I2C3 SDA, SCL */
 	pinmux_pin_set(porta, 1, PORT_PCR_MUX(kPORT_MuxAlt4)
 					| PORT_PCR_ODE_MASK);
@@ -60,7 +60,7 @@ static int frdm_k82f_pinmux_init(struct device *dev)
 					| PORT_PCR_ODE_MASK);
 #endif
 
-#if DT_NODE_HAS_STATUS(DT_NODELABEL(spi1), okay)
+#if DT_NODE_HAS_STATUS(DT_NODELABEL(spi1), okay) && CONFIG_SPI
 	/* SPI1 SCK, SOUT, SIN, PCS0 */
 	pinmux_pin_set(porte, 1, PORT_PCR_MUX(kPORT_MuxAlt2));
 	pinmux_pin_set(porte, 2, PORT_PCR_MUX(kPORT_MuxAlt2));
@@ -71,13 +71,13 @@ static int frdm_k82f_pinmux_init(struct device *dev)
 	pinmux_pin_set(porte, 3, PORT_PCR_MUX(kPORT_MuxAsGpio));
 #endif
 
-#if DT_NODE_HAS_STATUS(DT_NODELABEL(lpuart4), okay)
+#if DT_NODE_HAS_STATUS(DT_NODELABEL(lpuart4), okay) && CONFIG_SERIAL
 	/* LPUART4 RX, TX */
 	pinmux_pin_set(portc, 14, PORT_PCR_MUX(kPORT_MuxAlt3));
 	pinmux_pin_set(portc, 15, PORT_PCR_MUX(kPORT_MuxAlt3));
 #endif
 
-#if DT_NODE_HAS_STATUS(DT_NODELABEL(adc0), okay)
+#if DT_NODE_HAS_STATUS(DT_NODELABEL(adc0), okay) && CONFIG_ADC
 	/* ADC0_SE15 */
 	pinmux_pin_set(portc,  1, PORT_PCR_MUX(kPORT_PinDisabledOrAnalog));
 #endif
