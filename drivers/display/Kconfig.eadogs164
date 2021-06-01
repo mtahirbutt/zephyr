@@ -1,0 +1,22 @@
+# EADOGS164 display driver configuration options
+
+# Copyright (c) 2020 Wilmers Messtechnik GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+menuconfig EADOGS164_LCD_ERW
+	bool "EADOGS164 display driver"
+	depends on I2C
+	help
+	  Enable driver for EADOGS164 display driver.
+
+if EADOGS164_LCD_ERW
+
+config EADOGS164_LCD_ROM
+	int "Select one of out possible ROM, 0-ROMA, 1-ROMB, 3-ROMC"
+	default 1
+
+config EADOGS164_LCD_RAB2_0
+	int "resistor values for internal feedback amp for LCD voltage (0-7)"
+	default 3
+	range 0 7
+endif # EADOGS164_LCD_ERW
